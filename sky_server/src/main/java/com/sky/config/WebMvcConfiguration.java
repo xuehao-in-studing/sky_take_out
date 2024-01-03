@@ -18,9 +18,38 @@ import java.util.Map;
 
 /**
  * 配置类，注册web层相关组件
+ * 打开api文档的地质: http:localhost:8080/doc.html
+ * 其中localhost代表ip，8080代表端口号，可以更换
  */
 @Configuration
-public class WebMvcConfiguration{
+@Slf4j
+public class WebMvcConfiguration extends WebMvcConfigurationSupport {
+
+
+    @Autowired
+    private JwtTokenAdminInterceptor jwtTokenAdminInterceptor;
+
+    /**
+     * 注册自定义拦截器
+     *
+     * @param registry
+     */
+    protected void addInterceptors(InterceptorRegistry registry) {
+        log.info("开始注册自定义拦截器...");
+        registry.addInterceptor(jwtTokenAdminInterceptor)
+                .addPathPatterns("/admin/**")
+                .excludePathPatterns("/admin/employee/login");
+    }
+
+    /**
+     * 设置静态资源映射
+     * @param registry
+     */
+    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
+
     /**
      * 根据@Tag 上的排序，写入x-order
      *
@@ -48,10 +77,9 @@ public class WebMvcConfiguration{
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("XXX用户系统API")
+                        .title("苍穹外卖接口文档")
                         .version("1.0")
-
-                        .description( "Knife4j集成springdoc-openapi示例")
+                        .description( "苍穹外卖接口文档")
                         .termsOfService("http://doc.xiaominfo.com")
                         .license(new License().name("Apache 2.0")
                                 .url("http://doc.xiaominfo.com")));

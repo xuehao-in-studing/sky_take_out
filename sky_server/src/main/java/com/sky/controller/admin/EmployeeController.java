@@ -1,6 +1,8 @@
 package com.sky.controller.admin;
 
+import com.sky.aop.FormatValidator;
 import com.sky.constant.JwtClaimsConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.properties.JwtProperties;
@@ -73,5 +75,18 @@ public class EmployeeController {
     public Result<String> logout() {
         return Result.success();
     }
+
+    @PostMapping()
+    @Operation(summary = "添加员工")
+    public Result<Employee> add(@RequestBody EmployeeDTO employeeDTO) {
+
+        log.info("添加员工：{}", employeeDTO);
+        Employee employee = employeeService.add(employeeDTO);
+        if(employee == null) {
+            return Result.error("添加失败");
+        }
+        return Result.success(employee);
+    }
+
 
 }
