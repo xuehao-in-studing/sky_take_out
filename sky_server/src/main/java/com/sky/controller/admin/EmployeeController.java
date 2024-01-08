@@ -104,4 +104,12 @@ public class EmployeeController {
         return Result.success(pageResult);
     }
 
+    @PostMapping("/status/{status}")
+    @Operation(summary = "更新员工信息")
+    public Result<String> update(@PathVariable("status") Integer status,Long id) {
+        log.info("更新员工信息：{}", id);
+        employeeService.update(status,id);
+        return Result.success();
+    }
+
 }

@@ -13,6 +13,7 @@ spring:
     password: ${sky.datasource.password}
     type: com.alibaba.druid.pool.DruidDataSource
 
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -24,7 +25,6 @@ springdoc:
     - group: 'default'
       paths-to-match: '/**'
       packages-to-scan: com.sky
-
 
 knife4j:
   enable: true
@@ -48,5 +48,5 @@ logging:
 sky:
   jwt:
     admin-secret-key: itcast
-    admin-ttl: 7200000
+    admin-ttl: 72000000
     admin-token-name: token
