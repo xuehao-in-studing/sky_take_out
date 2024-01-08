@@ -1,16 +1,21 @@
 package com.sky.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
 import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
+import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.result.PageResult;
 import com.sky.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -23,6 +28,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -66,6 +72,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
+    /**
+     * 添加新员工
+     *
+     * @param employeeDTO
+     * @return Employee
+     */
     @Override
     public Employee add(EmployeeDTO employeeDTO) {
 
@@ -85,13 +97,28 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setStatus(StatusConstant.ENABLE);
 
         // 设置创建人
-        // TODO: 后期需要更改为当前的登录管理员
         employee.setCreateUser(BaseContext.getCurrentId());
         employee.setUpdateUser(BaseContext.getCurrentId());
 
         employeeMapper.add(employee);
 
         return employee;
+    }
+
+    /**
+     * 员工分页查询,得到当前页的查询结果
+     *
+     * @param employeePageQueryDTO 前端传参DTO，包含员工姓名、页码、每页显示记录数
+     * @return PageResult 当前页查询结果
+     */
+    @Override
+    public PageResult page(EmployeePageQueryDTO employeePageQueryDTO) {
+        PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
+        Page<Employee> page = employeeMapper.page(employeePageQueryDTO);
+        PageInfo<Employee> pageInfo = new PageInfo<>(page);
+        long total = pageInfo.getTotal();
+        List<Employee> result = pageInfo.getList();
+        return new PageResult(total, result);
     }
 
 }
