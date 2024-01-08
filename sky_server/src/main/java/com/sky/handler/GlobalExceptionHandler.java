@@ -39,8 +39,7 @@ public class GlobalExceptionHandler {
             String name = ex.getMessage().split(" ")[2];
             String mess = name + MessageConstant.USER_EXISTS;
             return Result.error(mess);
-        }
-        else {
+        } else {
             return Result.error(MessageConstant.UNKNOWN_ERROR);
         }
     }

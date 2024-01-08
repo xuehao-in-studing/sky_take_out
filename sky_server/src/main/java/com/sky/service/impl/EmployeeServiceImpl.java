@@ -10,6 +10,7 @@ import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.dto.EmployeePageQueryDTO;
+import com.sky.dto.PasswordEditDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
@@ -128,6 +129,37 @@ public class EmployeeServiceImpl implements EmployeeService {
                 .id(id)
                 .build();
         employeeMapper.update(employee);
+    }
+
+    @Override
+    public void update(EmployeeDTO employeeDTO) {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO,employee);
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
+    }
+
+    @Override
+    public void update(PasswordEditDTO passwordEditDTO) {
+        // TODO: 2024/01/08 密码逻辑待完善，例如新旧密码不能相同，密码长度限制，密码不包含空格等
+        Employee employee = employeeMapper.getById(passwordEditDTO.getEmpId());
+
+        if(!DigestUtils.md5DigestAsHex(passwordEditDTO.getOldPassword().getBytes()).equals(
+                employee.getPassword())){
+            throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
+        }
+        employee.setPassword(DigestUtils.md5DigestAsHex(
+                passwordEditDTO.getNewPassword().getBytes(StandardCharsets.UTF_8)));
+        employee.setUpdateTime(LocalDateTime.now());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        employeeMapper.update(employee);
+    }
+
+    @Override
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.getById(id);
+        return employee;
     }
 
 

@@ -2,6 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.sky.mapper.EmployeeMapper">
+    <select id="getByUsername" parameterType="String" resultType="com.sky.entity.Employee">
+        select * from employee where username = #{username}
+    </select>
+
     <select id="page" resultType="com.sky.entity.Employee">
         select * from employee
         <where>
@@ -11,12 +15,19 @@
         </where>
         order by create_time desc
     </select>
+
+    <insert id="add" parameterType="Employee">
+        insert into employee(id,username,name,password,id_number,phone,sex,status,update_time,update_user,create_time,create_user)
+        values(#{id},#{username},#{name},#{password},#{idNumber},#{phone},#{sex},#{status},#{updateTime},#{updateUser},#{createTime},#{createUser})
+    </insert>
+
     <update id="update" parameterType="Employee">
         update employee
         <set>
             <if test="name != null and name != ''">name = #{name},</if>
             <if test="username != null">username = #{username},</if>
             <if test="phone != null">phone = #{phone},</if>
+            <if test="password != null">password = #{password},</if>
             <if test="sex != null">sex = #{sex},</if>
             <if test="status != null">status = #{status},</if>
             <if test="idNumber != null">id_number = #{idNumber},</if>
@@ -25,6 +36,10 @@
         </set>
         where id = #{id}
     </update>
+
+    <select id="getById" resultType="com.sky.entity.Employee">
+        select * from employee where id = #{id}
+    </select>
 
     
 </mapper>

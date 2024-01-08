@@ -17,7 +17,6 @@ public interface EmployeeMapper {
      * @param username
      * @return
      */
-    @Select("select * from employee where username = #{username}")
     Employee getByUsername(String username);
 
     /**
@@ -26,8 +25,6 @@ public interface EmployeeMapper {
      * @return
      * create_time,create_user,id,id_number,name,password,phone,sex,status,update_time,update_user,username,create_time,create_user,id,id_number,name,password,phone,sex,status,update_time,update_user,username
      */
-    @Insert("insert into employee(id,username,name,password,id_number,phone,sex,status,update_time,update_user,create_time,create_user) " +
-            "values(#{id},#{username},#{name},#{password},#{idNumber},#{phone},#{sex},#{status},#{updateTime},#{updateUser},#{createTime},#{createUser})")
     int add(Employee employee);
 
     /**
@@ -45,9 +42,16 @@ public interface EmployeeMapper {
     Page<Employee> page(EmployeePageQueryDTO employeePageQueryDTO);
 
     /**
-     * 更新员工信息
+     * 更新员工个人信息
      * @param employee
      */
     void update(Employee employee);
+
+    /**
+     * 根据id查询员工
+     * @param id
+     * @return
+     */
+    Employee getById(Long id);
 
 }
