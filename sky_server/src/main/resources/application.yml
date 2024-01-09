@@ -21,8 +21,9 @@ springdoc:
     operations-sorter: alpha
   api-docs:
     path: /v3/api-docs
+    enabled: true
   group-configs:
-    - group: 'default'
+    - group: 'sky_takeout'
       paths-to-match: '/**'
       packages-to-scan: com.sky
 
